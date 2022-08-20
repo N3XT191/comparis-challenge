@@ -3,21 +3,40 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:3000", "*/*");
+                      });
+});
+
+// services.AddResponseCaching();
+
+builder.Services.AddControllers();
+
 var app = builder.Build();
+app.UseHttpsRedirection();
+
+
+app.UseCors(MyAllowSpecificOrigins);
 
 
 app.UseHttpsRedirection();
 
 
 
-app.MapGet("/todoitems", async (HttpRequest request) =>
+app.MapGet("/properties", async (HttpRequest request) =>
 {
     var propertyType = request.Query["propertyType"].ToString();
     var viewportString = request.Query["viewport"].ToString();
-    List<float> viewport = new List<float>();
 
+    List<float> viewport = new List<float>();
     if (!string.IsNullOrEmpty(viewportString))
     {
         viewport = Array.ConvertAll(viewportString.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries),
@@ -50,7 +69,7 @@ app.MapGet("/todoitems", async (HttpRequest request) =>
 });
 
 
-app.Run();
+app.Run("https://localhost:8000");
 
 
 bool IsInside(Property property, List<float> viewport) =>
