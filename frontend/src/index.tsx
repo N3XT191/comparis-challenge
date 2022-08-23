@@ -1,12 +1,8 @@
 import React from "react";
-import { render } from "react-dom";
-import MapWidget from "./MapWidget";
+import { createRoot } from "react-dom/client";
+import App from "./App";
 import "./index.css";
 
-const App = () => (
-	<div>
-		<MapWidget />
-	</div>
-);
-
-render(<App />, document.getElementById("root"));
+const container = document.getElementById("root");
+const root = createRoot(container!); // createRoot(container!) if you use TypeScript
+root.render(<App />);

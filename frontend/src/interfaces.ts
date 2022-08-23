@@ -1,6 +1,6 @@
 export interface Property {
 	title: string;
-	realEstateType: "House" | "Apartment";
+	realEstateType: RealEstateType;
 	streetName: string;
 	streetNumber: string;
 	zip: string;
@@ -10,6 +10,8 @@ export interface Property {
 }
 
 export interface FilterOptions {
-	realEstateType: "" | "House" | "Apartment";
+	realEstateType: RealEstateFilterType;
 	viewport: number[];
 }
+type RealEstateType = "House" | "Apartment";
+export type RealEstateFilterType = RealEstateType | "";

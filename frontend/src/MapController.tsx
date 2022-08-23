@@ -1,18 +1,22 @@
 import React, { useEffect, useCallback } from "react";
-import { defaultCenter, defaultZoom } from "./MapWidget";
+import { RealEstateFilterType } from "./interfaces";
+import { defaultCenter, defaultZoom } from "./App";
 
 export function MapController({
 	map,
 	setViewPort,
 	setRealEstateType,
+	realEstateType,
 }: {
 	map: any;
 	setViewPort: (viewport: number[]) => void;
-	setRealEstateType: (type: "" | "House" | "Apartment") => void;
+	setRealEstateType: (type: RealEstateFilterType) => void;
+	realEstateType: RealEstateFilterType;
 }) {
-	const onClick = useCallback(() => {
+	const onReset = useCallback(() => {
 		map.setView(defaultCenter, defaultZoom);
-	}, [map]);
+		setRealEstateType("");
+	}, [map, setRealEstateType]);
 
 	const onMove = useCallback(() => {
 		const bounds = map.getBounds();
@@ -34,11 +38,12 @@ export function MapController({
 
 	return (
 		<p>
-			<button onClick={onClick}>reset</button>
+			<button onClick={onReset}>reset</button>
 			<select
 				onChange={(e) =>
 					setRealEstateType(e.target.value as "" | "House" | "Apartment")
 				}
+				value={realEstateType}
 			>
 				<option value="">All</option>
 				<option value="House">Houses</option>

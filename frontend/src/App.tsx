@@ -6,6 +6,7 @@ import "leaflet-gpx";
 
 import useProperties from "./useProperties";
 import { MapController } from "./MapController";
+import { RealEstateFilterType } from "./interfaces";
 
 const markerIcon = new Icon({
 	iconUrl:
@@ -17,13 +18,11 @@ const markerIcon = new Icon({
 export const defaultCenter = [47.27591, 8.24956];
 export const defaultZoom = 10;
 
-interface Props {}
-const MapWidget = ({}: Props) => {
+const App = () => {
 	const [map, setMap] = useState<any>(null);
 	const [viewport, setViewport] = useState<number[]>([47.1, 7.6, 47.5, 8.9]);
-	const [realEstateType, setRealEstateType] = useState<
-		"" | "House" | "Apartment"
-	>("");
+	const [realEstateType, setRealEstateType] =
+		useState<RealEstateFilterType>("");
 
 	const {
 		data: properties,
@@ -63,7 +62,7 @@ const MapWidget = ({}: Props) => {
 	return (
 		<div
 			style={{
-				height: 400,
+				height: 500,
 				width: "100vw",
 				zIndex: 2,
 			}}
@@ -73,6 +72,7 @@ const MapWidget = ({}: Props) => {
 					map={map}
 					setViewPort={setViewport}
 					setRealEstateType={setRealEstateType}
+					realEstateType={realEstateType}
 				/>
 			) : null}
 			<div>Number of Properties loaded: {properties.length}</div>
@@ -81,4 +81,4 @@ const MapWidget = ({}: Props) => {
 	);
 };
 
-export default MapWidget;
+export default App;
