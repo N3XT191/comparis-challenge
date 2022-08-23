@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FilterOptions, Property } from "./interfaces";
+import { FilterOptions, Property } from "../interfaces/interfaces";
 
 const url = "https://localhost:8000/properties";
 

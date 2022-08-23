@@ -4,9 +4,9 @@ import L, { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-gpx";
 
-import useProperties from "./useProperties";
+import useProperties from "../hooks/useProperties";
 import { MapController } from "./MapController";
-import { RealEstateFilterType } from "./interfaces";
+import { RealEstateFilterType } from "../interfaces/interfaces";
 
 const markerIcon = new Icon({
 	iconUrl:

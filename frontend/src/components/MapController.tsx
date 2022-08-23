@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback } from "react";
-import { RealEstateFilterType } from "./interfaces";
+import { RealEstateFilterType } from "../interfaces/interfaces";
 import { defaultCenter, defaultZoom } from "./App";
 
 export function MapController({
