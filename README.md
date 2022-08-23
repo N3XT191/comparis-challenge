@@ -35,8 +35,9 @@ Due to personal time constraint, I have simplified the task slightly in the foll
 
 open `http://localhost:3000/` in any modern browser
 
-## Subsequent User Stories
+## Subsequent User Stories
 
 - As a user, I want to be able to see a list of all relevant information (adress etc.) when selecting a property.
+
 - As a user I want to be able to judge the surrounding area of a property by seeing markers of nearby schools, public transport, supermarkets etc.
 - As a maintainer I want to be able to add and modify properties without going into the source code.
