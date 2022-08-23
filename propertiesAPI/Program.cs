@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
+//setup, including CORS
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -15,27 +14,19 @@ builder.Services.AddCors(options =>
                           policy.WithOrigins("http://localhost:3000", "*/*");
                       });
 });
-
-// services.AddResponseCaching();
-
 builder.Services.AddControllers();
-
 var app = builder.Build();
 app.UseHttpsRedirection();
-
-
 app.UseCors(MyAllowSpecificOrigins);
 
 
-app.UseHttpsRedirection();
-
-
-
+//single GET endpoint for properties, filtering through querystring (propertyType and viewport)
 app.MapGet("/properties", async (HttpRequest request) =>
 {
-    var propertyType = request.Query["propertyType"].ToString();
-    var viewportString = request.Query["viewport"].ToString();
+    var propertyType = request.Query["propertyType"].ToString(); // has to be "" or "Apartment" or "House
+    var viewportString = request.Query["viewport"].ToString(); // has to be "" or "x1,y1,x2,y2"
 
+    //parse viewport
     List<float> viewport = new List<float>();
     if (!string.IsNullOrEmpty(viewportString))
     {
@@ -43,6 +34,7 @@ app.MapGet("/properties", async (HttpRequest request) =>
                        x => float.Parse(x)).ToList();
     }
 
+    //check propertyType
     if (!(string.IsNullOrEmpty(propertyType) || propertyType == "Apartment" || propertyType == "House"))
     {
         return Results.Problem("Invalid property type:" + propertyType);
@@ -52,9 +44,9 @@ app.MapGet("/properties", async (HttpRequest request) =>
         return Results.Problem("Invalid viewport:" + viewportString);
     }
 
+    //load and filter properties
     var properties = await JsonFileReader.ReadAsync<Property[]>("./properties.json");
     var filtered = properties;
-
     if (propertyType != "")
     {
         filtered = filtered.Where(property => property.RealEstateType == propertyType).ToArray();
@@ -68,14 +60,15 @@ app.MapGet("/properties", async (HttpRequest request) =>
     return Results.Ok(filtered);
 });
 
-
+//start backend
 app.Run("https://localhost:8000");
 
 
+//return if a single property is inside the viewport
 bool IsInside(Property property, List<float> viewport) =>
     property.Latitude > viewport[0] && property.Longitude > viewport[1] && property.Latitude < viewport[2] && property.Longitude < viewport[3];
 
-
+//helper to parse JSON into any object
 public static class JsonFileReader
 {
     public static async Task<T> ReadAsync<T>(string filePath)
